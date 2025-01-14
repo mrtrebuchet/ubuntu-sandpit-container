@@ -1,0 +1,39 @@
+FROM archlinux:latest
+
+# Set timezone and user information
+RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
+
+# Packages to install
+ENV PACKAGES="\
+  bash-completion \
+  base-devel \
+  bash-completion \
+  curl \
+  git \
+  sudo \
+  vim \
+  wget"
+
+# Install Packages
+RUN pacman --noconfirm -Suy && pacman --noconfirm -S $PACKAGES
+
+# Set a passwordless sudoer user
+RUN useradd -m -G wheel -s /bin/bash sysed && \
+    mkdir -p /etc/sudoers.d/ && \
+    echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/nopasswd
+
+# Environment
+ENV TERM=xterm
+ENV PS1="\n\n>> sysed \W \$ "
+
+# Switch to the sysed user
+WORKDIR /home/sysed
+USER sysed
+
+# Install dotfiles
+ARG CACHEBUST=1
+RUN git clone -b full-init https://github.com/mrtrebuchet/ezsh-labed.git ./zsh-setup 
+# WORKDIR /home/ubuntu/zsh-setup 
+# RUN ./install.sh
+# WORKDIR /home/ubuntu
+CMD ["bash"]
