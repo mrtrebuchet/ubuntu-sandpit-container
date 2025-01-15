@@ -32,7 +32,7 @@ USER sysed
 
 # Install dotfiles
 ARG CACHEBUST=1
-RUN git clone -b full-init https://github.com/mrtrebuchet/ezsh-labed.git ./zsh-setup 
+RUN git clone https://github.com/mrtrebuchet/labed-init.git ./zsh-setup 
 # WORKDIR /home/ubuntu/zsh-setup 
 # RUN ./install.sh
 # WORKDIR /home/ubuntu
